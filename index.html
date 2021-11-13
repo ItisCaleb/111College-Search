@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <title>111校系簡易查詢</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <form @submit.prevent="search()">
+            <label>學校名稱
+                <input placeholder="交大" v-model="name">
+            </label>
+            <label>校系名稱
+                <input placeholder="資工" v-model="department">
+            </label>
+            <button>查詢</button>
+
+        </form>
+        <div v-if="schools===null">
+            <span>沒有結果ㄛ</span></n>
+            <span>你輸入ㄌ錯字</span>
+        </div>
+        <div v-for="(school,index) in schools" :key="school['序號']" >
+            <div style="cursor: pointer;font-size: 18px;font-weight: bold" @click="show(index)">{{school["系組名稱"]}}:{{school["學校名稱"]}}</div>
+            <div style="font-size: 14px;margin-left: 2%;width: 40%" v-if="vis[index]">
+                校碼:{{school["校碼"]}}<br>
+                採計科目及加權:<br>
+                    <span style="margin-left: 2%" v-for="(value,subject,_) in school['採計科目及加權']" :key="subject">
+                        {{subject}}:{{value}}<br>
+                    </span>
+                同分參酌:<br>
+                    <span style="margin-left: 2%" v-for="(value,subject,_) in school['同分參酌']" :key="subject">
+                        {{subject}}:{{value}}<br>
+                    </span>
+                選系說明:{{school["選系說明"]}}
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            name:"",
+            department:"",
+            schools:[],
+            vis:[]
+        },
+        methods:{
+            search(){
+                axios({
+                    method: 'post',
+                    url: `/search`,
+                    data:{
+                        name:this.name,
+                        department: this.department
+                    }
+                }).then(res=>{
+                    console.log(res.data)
+                    this.schools = res.data
+                    this.vis.splice(0,this.vis.length+1,...new Array(this.schools.length).fill(false))
+                })
+            },
+            show(index){
+                this.vis.splice(index,1,!this.vis[index])
+            }
+        }
+    })
+
+</script>
+</html>
