@@ -3,7 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"time"
 )
 
@@ -20,7 +20,7 @@ type School struct {
 var colleges []School
 
 func init() {
-	data, _ := os.ReadFile("./111.json")
+	data, _ := ioutil.ReadFile("./111.json")
 	json.Unmarshal(data, &colleges)
 }
 
