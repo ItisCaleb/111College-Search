@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-tw">
+<html lang="zh-tw" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>111校系簡易查詢</title>
@@ -11,20 +11,20 @@
         <form @submit.prevent="search()">
             <label>學校名稱
                 <input placeholder="交大" v-model="name">
-            </label>
+            </label><br>
             <label>校系名稱
                 <input placeholder="資工" v-model="department">
-            </label>
+            </label><br>
             <button>查詢</button>
 
         </form>
-        <div v-if="schools===null">
-            <span>沒有結果ㄛ</span></n>
-            <span>你輸入ㄌ錯字</span>
+        <div v-if="text">
+            <span>沒有結果ㄛ</span><br>
+            <span>{{text}}</span>
         </div>
         <div v-for="(school,index) in schools" :key="school['校碼']+school['序號']" >
-            <div style="cursor: pointer;font-size: 18px;font-weight: bold" @click="show(index)">{{school["系組名稱"]}}:{{school["學校名稱"]}}</div>
-            <div style="font-size: 14px;margin-left: 2%;width: 40%" v-if="vis[index]">
+            <div style="cursor: pointer;font-size: 100%;font-weight: bold" @click="show(index)">{{school["系組名稱"]}}:{{school["學校名稱"]}}</div>
+            <div style="font-size: 80%;margin-left: 2%;width: 40%" v-if="vis[index]">
                 校碼:{{school["校碼"]}}<br>
                 採計科目及加權:<br>
                     <span style="margin-left: 2%" v-for="(value,subject,_) in school['採計科目及加權']" :key="subject">
@@ -39,6 +39,20 @@
         </div>
     </div>
 </body>
+<style>
+    #app{
+        font-size: 200%;
+    }
+    input{
+        height: 200%;
+        font-size: 100%;
+    }
+    button{
+        height: 50%;
+        width: 40%;
+        font-size: 100%;
+    }
+</style>
 
 <script>
     new Vue({
@@ -47,7 +61,8 @@
             name:"",
             department:"",
             schools:[],
-            vis:[]
+            vis:[],
+            text:""
         },
         methods:{
             search(){
@@ -60,8 +75,17 @@
                     }
                 }).then(res=>{
                     console.log(res.data)
-                    this.schools = res.data
-                    this.vis.splice(0,this.vis.length+1,...new Array(this.schools.length).fill(false))
+                    this.schools = res.data || []
+                    this.vis.splice(0,this.schools.length+1,...new Array(this.schools.length).fill(false))
+                    if(!res.data) this.text = "你大概輸入ㄌ錯字"
+                    else this.text = ""
+                }).catch(err=>{
+                    console.log(err)
+                    if(err.toJSON().status === 429){
+                        this.schools = []
+                        this.vis.splice(0)
+                        this.text = "那你也是很快ㄟ"
+                    }
                 })
             },
             show(index){
