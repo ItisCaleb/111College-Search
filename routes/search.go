@@ -12,8 +12,11 @@ type School struct {
 	Num      string            `json:"校碼"`
 	Name     string            `json:"學校名稱"`
 	Depart   string            `json:"系組名稱"`
+	Standard map[string]string `json:"學測檢定標準"`
+	English  string 		   `json:"英聽檢定標準"`
 	Subject  map[string]string `json:"採計科目及加權"`
 	Priority map[string]string `json:"同分參酌"`
+	Tech     string			   `json:"術科類別"`
 	Desc     string            `json:"選系說明"`
 }
 

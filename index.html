@@ -5,6 +5,7 @@
     <title>111校系簡易查詢</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <meta name=”viewport” content=”width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div id="app">
@@ -23,35 +24,64 @@
             <span>{{text}}</span>
         </div>
         <div v-for="(school,index) in schools" :key="school['校碼']+school['序號']" >
-            <div style="cursor: pointer;font-size: 100%;font-weight: bold" @click="show(index)">{{school["系組名稱"]}}:{{school["學校名稱"]}}</div>
+            <div class="name" @click="show(index)">{{school["系組名稱"]}}:{{school["學校名稱"]}}</div>
             <div style="font-size: 80%;margin-left: 2%;width: 40%" v-if="vis[index]">
                 校碼:{{school["校碼"]}}<br>
+                學測檢定標準:<br>
+                <span style="margin-left: 4%" v-for="(value,subject,_) in school['學測檢定標準']" :key="subject">
+                        - {{subject}}:{{value}}<br>
+                </span>
+                英聽檢定標準:{{school["英聽檢定標準"]}}<br>
                 採計科目及加權:<br>
-                    <span style="margin-left: 2%" v-for="(value,subject,_) in school['採計科目及加權']" :key="subject">
-                        {{subject}}:{{value}}<br>
-                    </span>
+                <span style="margin-left: 4%" v-for="(value,subject,_) in school['採計科目及加權']" :key="subject">
+                    - {{subject}}:{{value}}<br>
+                </span>
                 同分參酌:<br>
-                    <span style="margin-left: 2%" v-for="(value,subject,_) in school['同分參酌']" :key="subject">
-                        {{subject}}:{{value}}<br>
-                    </span>
+                <span style="margin-left: 4%" v-for="(value,subject,_) in school['同分參酌']" :key="subject">
+                        - {{subject}}:{{value}}<br>
+                </span>
+                術科類別:{{school["術科類別"]}}<br>
                 選系說明:{{school["選系說明"]}}
             </div>
         </div>
     </div>
 </body>
 <style>
-    #app{
-        font-size: 200%;
+    @media(max-width: 1023px){
+        #app{
+            font-size: 200%;
+        }
+        input{
+            height: 200%;
+            font-size: 100%;
+        }
+        button{
+            height: 50%;
+            width: 40%;
+            font-size: 100%;
+        }
+        .name{
+            font-size: 30px;
+            cursor: pointer;
+            font-weight: bold
+        }
     }
-    input{
-        height: 200%;
-        font-size: 100%;
+    @media(min-width: 1024px){
+        #app{
+            font-size: 150%;
+        }
+        input{
+            height: 150%;
+            font-size: 100%;
+        }
+        button{
+            height: 50%;
+            width: 25%;
+            font-size: 100%;
+        }
     }
-    button{
-        height: 50%;
-        width: 40%;
-        font-size: 100%;
-    }
+
+
 </style>
 
 <script>
