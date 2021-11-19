@@ -109,18 +109,14 @@
                         department: this.department
                     }
                 }).then(res=>{
-                    console.log(res.data)
                     this.schools = res.data || []
                     this.vis.splice(0,this.schools.length+1,...new Array(this.schools.length).fill(false))
                     if(!res.data) this.text = "你大概輸入ㄌ錯字"
                     else this.text = ""
                 }).catch(err=>{
-                    console.log(err)
-                    if(err.toJSON().status === 429){
-                        this.schools = []
-                        this.vis.splice(0)
-                        this.text = "那你也是很快ㄟ"
-                    }
+                    this.schools = []
+                    this.vis.splice(0)
+                    this.text = err.response.data
                 })
             },
             show(index){

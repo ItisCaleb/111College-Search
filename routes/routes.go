@@ -26,8 +26,7 @@ func SearchSchool(rw http.ResponseWriter, r *http.Request) {
 		ip, _, _:= net.SplitHostPort(r.RemoteAddr)
 		if limiter,ok := Limiters[ip];ok {
 			if allow := limiter.AllowN(time.Now(),5);!allow{
-				rw.WriteHeader(http.StatusTooManyRequests)
-				fmt.Fprintf(rw,"星爆爆")
+				ServerError(rw,http.StatusTooManyRequests,"那你也是很快ㄟ")
 				return
 			}
 		}else {
@@ -38,7 +37,19 @@ func SearchSchool(rw http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return
 		}
-		s := Search(body.Get("name").MustString(),body.Get("department").MustString())
-		fmt.Fprintf(rw, string(s))
+		name := body.Get("name").MustString()
+		department := body.Get("department").MustString()
+		if len([]rune(name)) < 40 && len([]rune(department)) < 40{
+			s := Search(name,department)
+			fmt.Fprintf(rw, string(s))
+		}else {
+			ServerError(rw,400,"沒有名字那麼長的學校好ㄇ")
+		}
+
 	}
+}
+
+func ServerError(rw http.ResponseWriter, status int, str string){
+	rw.WriteHeader(status)
+	fmt.Fprintf(rw,str)
 }

@@ -46,23 +46,15 @@ func timeTrack(start time.Time, name string) {
 }
 
 func Lcs(a string, b string) bool {
-	var dp [40][40]int
 	str1 := []rune(a)
 	str2 := []rune(b)
 	la := len(str1)
 	lb := len(str2)
-	for i := 1; i <= la; i++ {
-		for j := 1; j <= lb; j++ {
-			if str1[i-1] == str2[j-1] {
-				dp[i][j] = dp[i-1][j-1] + 1
-			} else {
-				if dp[i-1][j] >= dp[i][j-1] {
-					dp[i][j] = dp[i-1][j]
-				} else {
-					dp[i][j] = dp[i][j-1]
-				}
-			}
+	count := 0
+	for j := 0; j < lb && count<la; j++ {
+		if str1[count] == str2[j] {
+			count++
 		}
 	}
-	return dp[la][lb] == la
+	return count == la
 }
