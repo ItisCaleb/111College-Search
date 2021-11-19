@@ -42,7 +42,7 @@ func Search(name string, department string) []byte {
 
 func timeTrack(start time.Time, name string) {
 	elapsed := time.Since(start)
-	fmt.Printf("%s took %s\n", name, elapsed)
+	fmt.Printf("%s took %s at %s\n", name, elapsed,time.Now().Format("2006/01/02;15:04"))
 }
 
 func Lcs(a string, b string) bool {
