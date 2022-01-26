@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"time"
+	"reflect"
 )
 
 type School struct {
@@ -27,11 +28,20 @@ func init() {
 	json.Unmarshal(data, &colleges)
 }
 
-func Search(name string, department string) []byte {
+func Search(name string, department string, subject map[string]interface{}) []byte {
 	var r []School
+	var sub []string
+	for k, v := range subject{
+		if reflect.TypeOf(v).Kind() == reflect.Bool{
+			if v == true {
+				sub = append(sub,k)
+			}
+		}
+	}
+	n := []rune(name); d := []rune(department)
 	defer timeTrack(time.Now(), "Search")
 	for _, college := range colleges {
-		if Lcs(name, college.Name) && Lcs(department, college.Depart) {
+		if SearchCollege(n,d,sub,college) {
 			r = append(r, college)
 		}
 	}
@@ -45,16 +55,29 @@ func timeTrack(start time.Time, name string) {
 	fmt.Printf("%s took %s at %s\n", name, elapsed,time.Now().Format("2006/01/02;15:04"))
 }
 
-func Lcs(a string, b string) bool {
-	str1 := []rune(a)
-	str2 := []rune(b)
-	la := len(str1)
-	lb := len(str2)
-	count := 0
-	for j := 0; j < lb && count<la; j++ {
-		if str1[count] == str2[j] {
-			count++
+func SearchCollege(name []rune, department []rune, subject []string, college School) bool {
+	lname := len(name)
+	ldepartment := len(department)
+	cname := []rune(college.Name)
+	cdepart := []rune(college.Depart)
+	c1 := 0; c2 := 0
+	for i := 0; i < len(cname) && c1 < lname; i++{
+		if name[c1] == cname[i]{
+			c1++
 		}
 	}
-	return count == la
+	for i := 0; i < len(cdepart) && c2 < ldepartment; i++{
+		if department[c2] == cname[i]{
+			c2++
+		}
+	}
+	for _, val := range subject{
+		if _, ok := college.Subject[val];!ok{
+			return false
+		}
+	}
+	return c1 == lname && c2 == ldepartment
+
 }
+
+

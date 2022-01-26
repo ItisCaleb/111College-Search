@@ -9,78 +9,143 @@
     <meta name="description" content="111校系分則超簡易查詢">
 </head>
 <body>
-    <div id="app">
-        <form @submit.prevent="search()">
-            <label>學校名稱
-                <input placeholder="交大" v-model="name">
+<div id="app">
+    <form @submit.prevent="search()">
+        <label>學校名稱
+            <input type="text" placeholder="交大" v-model="name">
+        </label><br>
+        <label>校系名稱
+            <input type="text" placeholder="資工" v-model="department">
+        </label><br>
+        <label>採計科目(包含)</label><br>
+        <div style="margin-left: 2%">
+            學測:
+            <label>
+                國<input type="checkbox" v-model="subject.國文">
+            </label>
+            <label>
+                英<input type="checkbox" v-model="subject.英文">
+            </label>
+            <label>
+                數A<input type="checkbox" v-model="subject.數學A">
+            </label>
+            <label>
+                數B<input type="checkbox" v-model="subject.數學B">
+            </label>
+            <label>
+                自<input type="checkbox" v-model="subject.自然">
+            </label>
+            <label>
+                社<input type="checkbox" v-model="subject.社會">
             </label><br>
-            <label>校系名稱
-                <input placeholder="資工" v-model="department">
-            </label><br>
-            <button>查詢</button>
-
-        </form>
-        <div v-if="text">
-            <span>沒有結果ㄛ</span><br>
-            <span>{{text}}</span>
+            分科:
+            <label>
+                數甲<input type="checkbox" v-model="subject.數學甲">
+            </label>
+            <label>
+                物<input type="checkbox" v-model="subject.物理">
+            </label>
+            <label>
+                化<input type="checkbox" v-model="subject.化學">
+            </label>
+            <label>
+                地<input type="checkbox" v-model="subject.地理">
+            </label>
+            <label>
+                生<input type="checkbox" v-model="subject.生物">
+            </label>
+            <label>
+                公<input type="checkbox" v-model="subject.公民">
+            </label>
+            <label>
+                歷<input type="checkbox" v-model="subject.歷史">
+            </label>
         </div>
-        <div v-for="(school,index) in schools" :key="school['校碼']+school['序號']" >
-            <div class="name" @click="show(index)">{{school["系組名稱"]}}:{{school["學校名稱"]}}</div>
-            <div style="font-size: 80%;margin-left: 2%;width: 40%" v-if="vis[index]">
-                校碼:{{school["校碼"]}}<br>
-                學測檢定標準:<br>
-                <span style="margin-left: 4%" v-for="(value,subject,_) in school['學測檢定標準']" :key="subject">
-                        - {{subject}}:{{value}}<br>
+
+        <br>
+        <button>查詢</button>
+
+    </form>
+    <div v-if="text">
+        <span>沒有結果ㄛ</span><br>
+        <span>{{ text }}</span>
+    </div>
+    <div v-for="(school,index) in schools" :key="school['校碼']+school['序號']">
+        <div class="name" @click="show(index)">{{ school["系組名稱"] }}:{{ school["學校名稱"] }}</div>
+        <div style="font-size: 80%;margin-left: 2%;width: 40%" v-if="vis[index]">
+            校碼:{{ school["校碼"] }}<br>
+            學測檢定標準:<br>
+            <span style="margin-left: 4%" v-for="(value,subject,_) in school['學測檢定標準']" :key="subject">
+                        - {{ subject }}:{{ value }}<br>
                 </span>
-                英聽檢定標準:{{school["英聽檢定標準"]}}<br>
-                採計科目及加權:<br>
-                <span style="margin-left: 4%" v-for="(value,subject,_) in school['採計科目及加權']" :key="subject">
-                    - {{subject}}:{{value}}<br>
+            英聽檢定標準:{{ school["英聽檢定標準"] }}<br>
+            採計科目及加權:<br>
+            <span style="margin-left: 4%" v-for="(value,subject,_) in school['採計科目及加權']" :key="subject">
+                    - {{ subject }}:{{ value }}<br>
                 </span>
-                同分參酌:<br>
-                <span style="margin-left: 4%" v-for="(value,subject,_) in school['同分參酌']" :key="subject">
-                        - {{subject}}:{{value}}<br>
+            同分參酌:<br>
+            <span style="margin-left: 4%" v-for="(value,subject,_) in school['同分參酌']" :key="subject">
+                        - {{ subject }}:{{ value }}<br>
                 </span>
-                術科類別:{{school["術科類別"]}}<br>
-                選系說明:{{school["選系說明"]}}
-            </div>
+            術科類別:{{ school["術科類別"] }}<br>
+            選系說明:{{ school["選系說明"] }}
         </div>
     </div>
+</div>
 </body>
 <style>
-    @media(max-width: 1023px){
-        #app{
+    @media (max-width: 1023px) {
+        #app {
             font-size: 200%;
         }
-        input{
+
+        input[type=text] {
             height: 200%;
             font-size: 100%;
         }
-        button{
+
+        input[type=checkbox] {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        button {
             height: 50%;
             width: 40%;
             font-size: 100%;
         }
-        .name{
+
+        .name {
             font-size: 30px;
             cursor: pointer;
             font-weight: bold
         }
     }
-    @media(min-width: 1024px){
-        #app{
+
+    @media (min-width: 1024px) {
+        #app {
             font-size: 150%;
         }
-        input{
+
+        input[type=text] {
             height: 150%;
             font-size: 100%;
         }
-        button{
+
+        input[type=checkbox] {
+            width: 25px;
+            height: 25px;
+            vertical-align: middle;
+        }
+
+        button {
             height: 50%;
             width: 25%;
             font-size: 100%;
         }
-        .name{
+
+        .name {
             cursor: pointer;
             font-weight: bold
         }
@@ -91,36 +156,52 @@
 
 <script>
     new Vue({
-        el:'#app',
-        data:{
-            name:"",
-            department:"",
-            schools:[],
-            vis:[],
-            text:""
+        el: '#app',
+        data: {
+            name: "",
+            department: "",
+            subject: {
+                "國文": false,
+                "英文": false,
+                "數學A": false,
+                "數學B": false,
+                "自然": false,
+                "社會": false,
+                "數學甲": false,
+                "物理": false,
+                "化學": false,
+                "地理": false,
+                "生物": false,
+                "公民": false,
+                "歷史": false,
+            },
+            schools: [],
+            vis: [],
+            text: ""
         },
-        methods:{
-            search(){
+        methods: {
+            search() {
                 axios({
                     method: 'post',
                     url: `/search`,
-                    data:{
-                        name:this.name,
-                        department: this.department
+                    data: {
+                        name: this.name,
+                        department: this.department,
+                        subject: this.subject
                     }
-                }).then(res=>{
+                }).then(res => {
                     this.schools = res.data || []
-                    this.vis.splice(0,this.schools.length+1,...new Array(this.schools.length).fill(false))
-                    if(!res.data) this.text = "你大概輸入ㄌ錯字"
+                    this.vis.splice(0, this.schools.length + 1, ...new Array(this.schools.length).fill(false))
+                    if (!res.data) this.text = "你大概輸入ㄌ錯字"
                     else this.text = ""
-                }).catch(err=>{
+                }).catch(err => {
                     this.schools = []
                     this.vis.splice(0)
                     this.text = err.response.data
                 })
             },
-            show(index){
-                this.vis.splice(index,1,!this.vis[index])
+            show(index) {
+                this.vis.splice(index, 1, !this.vis[index])
             }
         }
     })

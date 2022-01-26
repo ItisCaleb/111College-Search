@@ -34,13 +34,15 @@ func SearchSchool(rw http.ResponseWriter, r *http.Request) {
 		}
 		data,_ := ioutil.ReadAll(r.Body)
 		body,err := simplejson.NewJson(data)
+		name, err := body.Get("name").String()
+		department, err := body.Get("department").String()
+		subject, err := body.Get("subject").Map()
 		if err != nil {
+			ServerError(rw,400,"屁眼")
 			return
 		}
-		name := body.Get("name").MustString()
-		department := body.Get("department").MustString()
 		if len([]rune(name)) < 40 && len([]rune(department)) < 40{
-			s := Search(name,department)
+			s := Search(name,department,subject)
 			fmt.Fprintf(rw, string(s))
 		}else {
 			ServerError(rw,400,"沒有名字那麼長的學校好ㄇ")
