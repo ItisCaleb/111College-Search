@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"time"
 	"reflect"
+	"time"
 )
 
 type School struct {
@@ -67,7 +67,7 @@ func SearchCollege(name []rune, department []rune, subject []string, college Sch
 		}
 	}
 	for i := 0; i < len(cdepart) && c2 < ldepartment; i++{
-		if department[c2] == cname[i]{
+		if department[c2] == cdepart[i]{
 			c2++
 		}
 	}
